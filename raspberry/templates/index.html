@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Température & Humidité - DHT22</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; padding-top: 30px; background: #f0f8ff; }
+  h1 { color: #333; }
+  canvas { max-width: 800px; margin: auto; display: block; }
+</style>
+</head>
+<body>
+
+<h1>Température & Humidité en live</h1>
+<canvas id="myChart"></canvas>
+
+<script>
+const ctx = document.getElementById('myChart').getContext('2d');
+
+const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [
+            {
+                label: 'Température (°C)',
+                data: [],
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                yAxisID: 'y',
+                tension: 0.3,
+            },
+            {
+                label: 'Humidité (%)',
+                data: [],
+                borderColor: 'rgba(54, 162, 235, 1)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                yAxisID: 'y1',
+                tension: 0.3,
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        interaction: {
+            mode: 'index',
+            intersect: false,
+        },
+        stacked: false,
+        scales: {
+            y: {
+                type: 'linear',
+                position: 'left',
+                min: 0,
+                max: 50,
+                title: { display: true, text: 'Température (°C)' }
+            },
+            y1: {
+                type: 'linear',
+                position: 'right',
+                min: 0,
+                max: 100,
+                grid: { drawOnChartArea: false },
+                title: { display: true, text: 'Humidité (%)' }
+            }
+        }
+    }
+});
+
+function fetchData() {
+    fetch('/api/all')
+        .then(response => response.json())
+        .then(data => {
+            chart.data.labels = data.timestamps;
+            chart.data.datasets[0].data = data.temperature;
+            chart.data.datasets[1].data = data.humidity;
+            chart.update();
+        })
+        .catch(err => console.error('Erreur fetch:', err));
+}
+
+// Mise à jour toutes les 5 secondes
+setInterval(fetchData, 5000);
+fetchData();
+
+</script>
+
+</body>
+</html>

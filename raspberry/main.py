@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from temp import *
 
 app = Flask(__name__)
@@ -17,6 +17,10 @@ def all_data():
         'temperature': get_temperature(),
         'humidity': get_humidity()
     })
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)  # Accessible from other devices on the network

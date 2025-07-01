@@ -1,4 +1,4 @@
-import RPi.GPIO as GPIO                                               # Importation des librairies qui gerent les ports
+  GNU nano 7.2                                                           led.py                                                                     import RPi.GPIO as GPIO                                               # Importation des librairies qui gerent les ports
 import time                                                           # Importation de la librairie temps
 
 GPIO.setmode(GPIO.BCM)                                                # BCM : Numero des GPIO (GPIO 18)

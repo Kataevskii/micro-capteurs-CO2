@@ -5,85 +5,136 @@
 <title>Température & Humidité - DHT22</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  body { font-family: Arial, sans-serif; text-align: center; padding-top: 30px; background: #f0f8ff; }
-  h1 { color: #333; }
-  canvas { max-width: 800px; margin: auto; display: block; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: Arial, sans-serif;
+    background: #f0f8ff;
+  }
+  body {
+    display: flex;
+    height: 100vh;
+  }
+  #left-panel {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;        /* réduit l’espacement */
+    padding: 10px;    /* padding plus petit */
+    box-sizing: border-box;
+  }
+  canvas {
+    flex-grow: 0;
+    height: 40vh !important; /* fixe une hauteur relative plus petite */
+    width: 100% !important;
+    max-width: none !important;
+  }
+  h1 {
+    text-align: center;
+    width: 100%;
+    margin: 5px 0 8px 0;  /* réduit marge entre titre et graphique */
+    color: #333;
+    font-size: 1.2rem;
+  }
 </style>
 </head>
 <body>
 
-<h1>Température & Humidité en live</h1>
-<canvas id="myChart"></canvas>
+<div id="left-panel">
+  <div>
+    <h1>Température (°C)</h1>
+    <canvas id="tempChart"></canvas>
+  </div>
+  <div>
+    <h1>Humidité (%)</h1>
+    <canvas id="humChart"></canvas>
+  </div>
+</div>
 
 <script>
-const ctx = document.getElementById('myChart').getContext('2d');
+const tempCtx = document.getElementById('tempChart').getContext('2d');
+const humCtx = document.getElementById('humChart').getContext('2d');
 
-const chart = new Chart(ctx, {
+const tempChart = new Chart(tempCtx, {
     type: 'line',
     data: {
         labels: [],
-        datasets: [
-            {
-                label: 'Température (°C)',
-                data: [],
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                yAxisID: 'y',
-                tension: 0.3,
-            },
-            {
-                label: 'Humidité (%)',
-                data: [],
-                borderColor: 'rgba(54, 162, 235, 1)',
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                yAxisID: 'y1',
-                tension: 0.3,
-            }
-        ]
+        datasets: [{
+            label: 'Température (°C)',
+            data: [],
+            borderColor: 'rgba(255, 99, 132, 1)',
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            tension: 0.3,
+            fill: true,
+            pointRadius: 2,
+        }]
     },
     options: {
         responsive: true,
-        interaction: {
-            mode: 'index',
-            intersect: false,
-        },
-        stacked: false,
         scales: {
             y: {
-                type: 'linear',
-                position: 'left',
                 min: 0,
                 max: 50,
-                title: { display: true, text: 'Température (°C)' }
+                title: { display: true, text: '°C' }
             },
-            y1: {
-                type: 'linear',
-                position: 'right',
+            x: {
+                ticks: { maxRotation: 45, minRotation: 45 }
+            }
+        },
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+
+const humChart = new Chart(humCtx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: [{
+            label: 'Humidité (%)',
+            data: [],
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            tension: 0.3,
+            fill: true,
+            pointRadius: 2,
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
                 min: 0,
                 max: 100,
-                grid: { drawOnChartArea: false },
-                title: { display: true, text: 'Humidité (%)' }
+                title: { display: true, text: '%' }
+            },
+            x: {
+                ticks: { maxRotation: 45, minRotation: 45 }
             }
+        },
+        plugins: {
+            legend: { display: false }
         }
     }
 });
 
 function fetchData() {
-    fetch('/api/all')
+    fetch('/data')
         .then(response => response.json())
         .then(data => {
-            chart.data.labels = data.timestamps;
-            chart.data.datasets[0].data = data.temperature;
-            chart.data.datasets[1].data = data.humidity;
-            chart.update();
+            tempChart.data.labels = data.timestamps;
+            tempChart.data.datasets[0].data = data.temperature;
+            tempChart.update();
+
+            humChart.data.labels = data.timestamps;
+            humChart.data.datasets[0].data = data.humidity;
+            humChart.update();
         })
         .catch(err => console.error('Erreur fetch:', err));
 }
 
-// Mise à jour toutes les 5 secondes
 setInterval(fetchData, 5000);
 fetchData();
-
 </script>
 
 </body>

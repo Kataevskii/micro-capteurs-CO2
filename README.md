@@ -1,5 +1,7 @@
 # Station météo
 
+![Photo de la station](IMG_7239.jpg)
+
 Objectif : réaliser une station autonome pour suivre la météo depuis le jardin des Mines.
 Moyens :
 - Programme d'identification des nuages reposant sur un algorithme de machine learning.

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Données temps réel</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div id="left-panel" style="width: 50%; /* float: left; <- supprimer */ margin-bottom: 20px;">
+        <div class="charts-container">
+            <div>
+                <h1>Température (°C)</h1>
+                <canvas id="tempChart"></canvas>
+            </div>
+            <div>
+                <h1>Humidité (%)</h1>
+                <canvas id="humChart"></canvas>
+            </div>
+            <div>
+                <h1>Pression (hPa)</h1>
+                <canvas id="presChart"></canvas>
+            </div>
+        </div>
+        <div class="slider-container">
+            <input id="timeRangeSlider" type="range" min="1" max="100" value="100" />
+            <div id="timeDisplay"></div>
+        </div>
+    </div>
+
+    <div id="right-panel" style="width: 45%; float: right; padding: 10px; border-left: 1px solid #ccc;">
+        <h1>Image capteur</h1>
+        <img id="sensorImage" src="" alt="Image capteur"
+            style="max-width: 100%; height: auto; display: block; margin-bottom: 10px;" />
+        <input id="imageSlider" type="range" min="1" max="100" value="100" style="width: 100%;" />
+        <div id="imageTimestamp" style="margin-top: 5px; font-style: italic;"></div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>

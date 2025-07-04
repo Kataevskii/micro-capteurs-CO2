@@ -28,3 +28,6 @@ Code à développer
     • Base de données locale SQLite ou similaire
     • Interface graphique pour affichage des données
     Scripts d’apprentissage automatique pour prédictions locales
+
+
+Baptiste Michaud, Mikhail Kataevskii, Adrian Dabas & Nathan Mornand

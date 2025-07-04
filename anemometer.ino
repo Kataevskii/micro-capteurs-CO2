@@ -47,6 +47,7 @@ void loop() {
       Serial.print("Vitesse : ");
       Serial.print(3.6 * vitesse, 2);
       Serial.println(" km/h");
+      lastSpeed = 3.6 * vitesse;
       status = 0; // on rénitialise pour un prochain passage
     }
   }

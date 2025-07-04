@@ -8,4 +8,5 @@ def save_image(url='http://your-api-address/photo', filename='image.jpg'):
         return filename
 
     except requests.RequestException as e:
-        return e
+        print(e)
+        return None

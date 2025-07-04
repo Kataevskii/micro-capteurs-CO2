@@ -21,4 +21,5 @@ def get_pressure():
         return pressure
 
     except Exception as e:
-        return e
+        print(e)
+        return None

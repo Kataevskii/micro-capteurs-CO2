@@ -1,178 +1,43 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8" />
-<title>Température & Humidité - DHT22</title>
-<<<<<<< HEAD
-<style>
-  body { font-family: Arial, sans-serif; text-align: center; padding-top: 50px; background: #f0f8ff; }
-  h1 { color: #333; }
-  .data { font-size: 2em; margin: 20px; }
-</style>
+    <meta charset="UTF-8" />
+    <title>Données temps réel</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
-  <h1>Température & Humidité en live</h1>
-  <div class="data" id="temperature">Température : -- °C</div>
-  <div class="data" id="humidity">Humidité : -- %</div>
+    <div id="left-panel" style="width: 50%; /* float: left; <- supprimer */ margin-bottom: 20px;">
+        <div class="charts-container">
+            <div>
+                <h1>Température (°C)</h1>
+                <canvas id="tempChart"></canvas>
+            </div>
+            <div>
+                <h1>Humidité (%)</h1>
+                <canvas id="humChart"></canvas>
+            </div>
+            <div>
+                <h1>Pression (hPa)</h1>
+                <canvas id="presChart"></canvas>
+            </div>
+        </div>
+        <div class="slider-container">
+            <input id="timeRangeSlider" type="range" min="1" max="100" value="100" />
+            <div id="timeDisplay"></div>
+        </div>
+    </div>
 
-<script>
-function fetchData() {
-  fetch('/data')
-    .then(response => response.json())
-    .then(data => {
-      if(data.temperature !== null && data.humidity !== null) {
-        document.getElementById('temperature').textContent = `Température : ${data.temperature.toFixed(1)} °C`;
-        document.getElementById('humidity').textContent = `Humidité : ${data.humidity.toFixed(1)} %`;
-      } else {
-        document.getElementById('temperature').textContent = 'Erreur de lecture';
-                document.getElementById('humidity').textContent = '';
-      }
-    })
-    .catch(() => {
-      document.getElementById('temperature').textContent = 'Erreur de connexion';
-      document.getElementById('humidity').textContent = '';
-    });
-}
-
-// Actualiser toutes les 2 secondes
-setInterval(fetchData, 2000);
-fetchData();  // première lecture au chargement
-</script>
-=======
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-  html, body {
-    margin: 0; padding: 0; height: 100%;
-    font-family: Arial, sans-serif;
-    background: #f0f8ff;
-  }
-  body {
-    display: flex;
-    height: 100vh;
-  }
-  #left-panel {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;        /* réduit l’espacement */
-    padding: 10px;    /* padding plus petit */
-    box-sizing: border-box;
-  }
-  canvas {
-    flex-grow: 0;
-    height: 40vh !important; /* fixe une hauteur relative plus petite */
-    width: 100% !important;
-    max-width: none !important;
-  }
-  h1 {
-    text-align: center;
-    width: 100%;
-    margin: 5px 0 8px 0;  /* réduit marge entre titre et graphique */
-    color: #333;
-    font-size: 1.2rem;
-  }
-</style>
-</head>
-<body>
-
-<div id="left-panel">
-  <div>
-    <h1>Température (°C)</h1>
-    <canvas id="tempChart"></canvas>
-  </div>
-  <div>
-    <h1>Humidité (%)</h1>
-    <canvas id="humChart"></canvas>
-  </div>
-</div>
-
-<script>
-const tempCtx = document.getElementById('tempChart').getContext('2d');
-const humCtx = document.getElementById('humChart').getContext('2d');
-
-const tempChart = new Chart(tempCtx, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: 'Température (°C)',
-            data: [],
-            borderColor: 'rgba(255, 99, 132, 1)',
-            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-            tension: 0.3,
-            fill: true,
-            pointRadius: 2,
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                min: 0,
-                max: 50,
-                title: { display: true, text: '°C' }
-            },
-            x: {
-                ticks: { maxRotation: 45, minRotation: 45 }
-            }
-        },
-        plugins: {
-            legend: { display: false }
-        }
-    }
-});
-
-const humChart = new Chart(humCtx, {
-    type: 'line',
-    data: {
-        labels: [],
-        datasets: [{
-            label: 'Humidité (%)',
-            data: [],
-            borderColor: 'rgba(54, 162, 235, 1)',
-            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-            tension: 0.3,
-            fill: true,
-            pointRadius: 2,
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                min: 0,
-                max: 100,
-                title: { display: true, text: '%' }
-            },
-            x: {
-                ticks: { maxRotation: 45, minRotation: 45 }
-            }
-        },
-        plugins: {
-            legend: { display: false }
-        }
-    }
-});
-
-function fetchData() {
-    fetch('/data')
-        .then(response => response.json())
-        .then(data => {
-            tempChart.data.labels = data.timestamps;
-            tempChart.data.datasets[0].data = data.temperature;
-            tempChart.update();
-
-            humChart.data.labels = data.timestamps;
-            humChart.data.datasets[0].data = data.humidity;
-            humChart.update();
-        })
-        .catch(err => console.error('Erreur fetch:', err));
-}
-
-setInterval(fetchData, 5000);
-fetchData();
-</script>
-
->>>>>>> dev
+    <div id="right-panel" style="width: 45%; float: right; padding: 10px; border-left: 1px solid #ccc;">
+        <h1>Image capteur</h1>
+        <img id="sensorImage" src="" alt="Image capteur"
+            style="max-width: 100%; height: auto; display: block; margin-bottom: 10px;" />
+        <input id="imageSlider" type="range" min="1" max="100" value="100" style="width: 100%;" />
+        <div id="imageTimestamp" style="margin-top: 5px; font-style: italic;"></div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
+
 </html>

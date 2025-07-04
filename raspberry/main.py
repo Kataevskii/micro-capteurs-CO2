@@ -1,26 +1,10 @@
-from flask import Flask, jsonify, render_template
-from temp import *
+import time
+import store_data
+from app import app
 
-app = Flask(__name__)
+def main():
+    store_data.init()
 
-@app.route('/api/temperature', methods=['GET'])
-def temperature():
-    return jsonify({'temperature': get_temperature()})
-
-@app.route('/api/humidity', methods=['GET'])
-def humidity():
-    return jsonify({'humidity': get_humidity()})
-
-@app.route('/api/all', methods=['GET'])
-def all_data():
-    return jsonify({
-        'temperature': get_temperature(),
-        'humidity': get_humidity()
-    })
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)  # Accessible from other devices on the network
+if __name__ == "__main__":
+    main()
+    app.run(debug=True, host='0.0.0.0')

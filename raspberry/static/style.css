@@ -1,0 +1,100 @@
+/* Reset & global */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: #f0f8ff;
+  overflow-x: hidden;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+}
+
+/* LEFT PANEL */
+#left-panel {
+  width: 50%;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Conteneur des 3 graphiques empilés verticalement */
+.charts-container > div {
+  background: white;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Canvas responsive */
+canvas {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 16 / 9;
+  flex-grow: 1;
+}
+
+/* Titres centrés */
+h1 {
+  text-align: center;
+  margin: 5px 0 8px;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+/* Slider en bas à gauche */
+.slider-container {
+  margin-top: auto;
+  border-top: 1px solid #ccc;
+  padding-top: 10px;
+}
+
+.slider-container input[type="range"] {
+  width: 100%;
+}
+
+#timeDisplay {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 8px;
+  color: #333;
+}
+
+/* RIGHT PANEL */
+#right-panel {
+  width: 45%;
+  padding: 10px;
+  box-sizing: border-box;
+  border-left: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+#right-panel h1 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#sensorImage {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-bottom: 10px;
+}
+
+#imageSlider {
+  width: 100%;
+}
+
+#imageTimestamp {
+  margin-top: 5px;
+  font-style: italic;
+  text-align: center;
+}

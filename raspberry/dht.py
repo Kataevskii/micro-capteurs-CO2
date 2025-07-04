@@ -13,8 +13,8 @@ def get_temperature():
         return sensor.temperature
     except (RuntimeError, Exception) as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
-        sensor.exit()
-        return error
+        print(error)
+        return None
 
 def get_humidity():
     try:
@@ -22,5 +22,5 @@ def get_humidity():
         return sensor.humidity
     except (RuntimeError, Exception) as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
-        sensor.exit()
-        return error
+        print(error)
+        return None

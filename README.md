@@ -57,6 +57,6 @@ Pour afficher simplement le dashboard, il suffit d'installer :
 - flask
 - pysqlite
 
-Pour lancer l'application complète, avec le recueil et enregistrement de données, exécutez le fichier `main.py`. Pour lancer simplement le dashboard, exécutez le fichier `app.py`.
+Pour lancer l'application complète, avec le recueil et enregistrement de données, exécutez le fichier `main.py` dans le dossier "raspberry". Pour lancer simplement le dashboard, exécutez le fichier `app.py` dans le même dossier.
 
 Auteurs du projet : Baptiste Michaud, Mikhail Kataevskii, Adrian Dabas & Nathan Mornand

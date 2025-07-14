@@ -6,4 +6,5 @@ def get_wind(url='http://10.42.0.86/wind'):
         return response.text
 
     except requests.RequestException as e:
-        return e
+        print(e)
+        return None

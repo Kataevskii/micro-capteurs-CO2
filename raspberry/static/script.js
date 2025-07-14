@@ -4,38 +4,39 @@ const presCtx = document.getElementById("presChart").getContext("2d");
 
 const slider = document.getElementById("timeRangeSlider");
 const timeDisplay = document.getElementById("timeDisplay");
+const imageSlider = document.getElementById("imageSlider");
+const imgElement = document.getElementById("sensorImage");
+const imageTimestamp = document.getElementById("imageTimestamp");
+const liveToggleButton = document.getElementById("liveToggleButton");
+const imageModeStatus = document.getElementById("imageModeStatus");
+
+let imageFiles = [];
+let liveImageMode = true;
+
+let isFetchingData = false;
+let isFetchingImages = false;
 
 const tempChart = new Chart(tempCtx, {
   type: "line",
   data: {
     labels: [],
-    datasets: [
-      {
-        label: "Température (°C)",
-        data: [],
-        borderColor: "rgba(255, 99, 132, 1)",
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        tension: 0.3,
-        fill: true,
-        pointRadius: 2,
-      },
-    ],
+    datasets: [{
+      label: "Température (°C)",
+      data: [],
+      borderColor: "rgba(255, 99, 132, 1)",
+      backgroundColor: "rgba(255, 99, 132, 0.2)",
+      tension: 0.3,
+      fill: true,
+      pointRadius: 2,
+    }],
   },
   options: {
     responsive: true,
     scales: {
-      y: {
-        min: 0,
-        max: 50,
-        title: { display: true, text: "°C" },
-      },
-      x: {
-        title: { display: true, text: "Time" },
-      },
+      y: { min: 0, max: 50, title: { display: true, text: "°C" } },
+      x: { title: { display: true, text: "Time" } },
     },
-    plugins: {
-      legend: { display: false },
-    },
+    plugins: { legend: { display: false } },
   },
 });
 
@@ -43,188 +44,144 @@ const humChart = new Chart(humCtx, {
   type: "line",
   data: {
     labels: [],
-    datasets: [
-      {
-        label: "Humidité (%)",
-        data: [],
-        borderColor: "rgba(54, 162, 235, 1)",
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        tension: 0.3,
-        fill: true,
-        pointRadius: 2,
-      },
-    ],
+    datasets: [{
+      label: "Humidité (%)",
+      data: [],
+      borderColor: "rgba(54, 162, 235, 1)",
+      backgroundColor: "rgba(54, 162, 235, 0.2)",
+      tension: 0.3,
+      fill: true,
+      pointRadius: 2,
+    }],
   },
   options: {
     responsive: true,
     scales: {
-      y: {
-        min: 0,
-        max: 100,
-        title: { display: true, text: "%" },
-      },
-      x: {
-        title: { display: true, text: "Time" },
-              },
+      y: { min: 0, max: 100, title: { display: true, text: "%" } },
+      x: { title: { display: true, text: "Time" } },
     },
-    plugins: {
-      legend: { display: false },
-    },
+    plugins: { legend: { display: false } },
   },
 });
-
 
 const presChart = new Chart(presCtx, {
   type: "line",
   data: {
     labels: [],
-    datasets: [
-      {
-        label: "Pression (hPa)",
-        data: [],
-        borderColor: "rgba(255, 206, 86, 1)",
-        backgroundColor: "rgba(255, 206, 86, 0.2)",
-        tension: 0.3,
-        fill: true,
-        pointRadius: 2,
-      },
-    ],
+    datasets: [{
+      label: "Pression (hPa)",
+      data: [],
+      borderColor: "rgba(255, 206, 86, 1)",
+      backgroundColor: "rgba(255, 206, 86, 0.2)",
+      tension: 0.3,
+      fill: true,
+      pointRadius: 2,
+    }],
   },
   options: {
     responsive: true,
     scales: {
-      y: {
-        min: 900,
-        max: 1100,
-        title: { display: true, text: "hPa" },
-      },
-      x: {
-        title: { display: true, text: "Time" },
-      },
+      y: { min: 900, max: 1100, title: { display: true, text: "hPa" } },
+      x: { title: { display: true, text: "Time" } },
     },
-    plugins: {
-      legend: { display: false },
-    },
+    plugins: { legend: { display: false } },
   },
 });
 
-
-const samplingIntervalSec = 5;
-
 function fetchData() {
+  if (isFetchingData) return;
+  isFetchingData = true;
+
   fetch("/data")
     .then((response) => response.json())
     .then((data) => {
-      const tempTimestamps = data.temperature.timestamps;
-      const humTimestamps = data.humidity.timestamps;
-      const tempValues = data.temperature.values;
-      const humValues = data.humidity.values;
-      const presTimestamps = data.pressure.timestamps;
-      const presValues = data.pressure.values;
+      const total = data.temperature.values.length;
+      if (slider.max != total) {
+        slider.max = total;
+        slider.value = total;
+      }
 
+      const count = parseInt(slider.value);
+      timeDisplay.textContent = `Derniers ${count} points`;
 
-      // Tronquer timestamps → HH:MM
-      const tempTimestampsShort = tempTimestamps.map((ts) =>
-        ts.substring(11, 16)
-      );
-      const humTimestampsShort = humTimestamps.map((ts) =>
-        ts.substring(11, 16)
-      );
-      const presTimestampsShort = presTimestamps.map((ts) =>
-        ts.substring(11, 16)
-      );
-
-
-
-
-      const sliderValue = slider.value;
-      const totalPoints = tempValues.length;
-      const numPoints = Math.max(
-        1,
-        Math.round(totalPoints * (sliderValue / 100))
-      );
-
-      const visibleTempValues = tempValues.slice(-numPoints);
-      const visibleTempTimestamps = tempTimestampsShort.slice(-numPoints);
-
-      const visibleHumValues = humValues.slice(-numPoints);
-      const visibleHumTimestamps = humTimestampsShort.slice(-numPoints);
-
-      const visiblePresValues = presValues.slice(-numPoints);
-      const visiblePresTimestamps = presTimestampsShort.slice(-numPoints);
-
-
-
-      tempChart.data.labels = visibleTempTimestamps;
-      tempChart.data.datasets[0].data = visibleTempValues;
-      tempChart.update();
-
-      humChart.data.labels = visibleHumTimestamps;
-      humChart.data.datasets[0].data = visibleHumValues;
-      humChart.update();
-
-      presChart.data.labels = visiblePresTimestamps;
-      presChart.data.datasets[0].data = visiblePresValues;
-      presChart.update();
-
-
-      updateTimeDisplay(numPoints);
+      updateChartData(tempChart, data.temperature, count);
+      updateChartData(humChart, data.humidity, count);
+      updateChartData(presChart, data.pressure, count);
     })
-    .catch((err) => console.error("Erreur fetch:", err));
+    .catch((err) => console.error("Erreur fetch:", err))
+    .finally(() => {
+      isFetchingData = false;
+    });
 }
 
-function updateTimeDisplay(numPoints) {
-  timeDisplay.textContent = `Affichage : ${slider.value}%`;
+function updateChartData(chart, dataset, count) {
+  const labels = dataset.timestamps.map((ts) => ts.slice(11, 16));
+  chart.data.labels = labels.slice(-count);
+  chart.data.datasets[0].data = dataset.values.slice(-count);
+  chart.update();
 }
-
-slider.addEventListener("input", fetchData);
-
-let imageFiles = [];
 
 function fetchImages() {
+  if (isFetchingImages) return;
+  isFetchingImages = true;
+
   fetch("/images")
     .then((response) => response.json())
     .then((files) => {
       imageFiles = files;
-      updateImageSlider();
-      displayImage();
+      imageSlider.max = files.length;
+      if (liveImageMode) imageSlider.value = files.length;
+      imageSlider.disabled = liveImageMode || !imageFiles.length;
+      if (liveImageMode) displayImage();
     })
-    .catch((err) => console.error("Erreur fetch images:", err));
-}
-
-function updateImageSlider() {
-  const slider = document.getElementById("imageSlider");
-  slider.disabled = imageFiles.length === 0;
+    .catch((err) => console.error("Erreur fetch images:", err))
+    .finally(() => {
+      isFetchingImages = false;
+    });
 }
 
 function displayImage() {
-  const slider = document.getElementById("imageSlider");
   if (!imageFiles.length) return;
 
-  const index = Math.max(
-    0,
-    Math.round(imageFiles.length * (slider.value / 100)) - 1
-  );
-  let filename = imageFiles[index];
+  const index = Math.max(0, Math.min(imageFiles.length - 1, imageSlider.value - 1));
+  const filename = imageFiles[index];
 
-  // Enlève les guillemets en trop, s'il y en a
-  filename = filename.replace(/"/g, "");
-
-  const imgElement = document.getElementById("sensorImage");
   imgElement.onerror = () => {
     console.error("Erreur chargement image:", imgElement.src);
     imgElement.alt = "Erreur de chargement de l'image";
   };
 
   imgElement.src = `/static/images/${encodeURIComponent(filename)}`;
-
-  document.getElementById("imageTimestamp").textContent = filename.substring(
-    0,
-    19
-  );
+  imageTimestamp.textContent = filename.substring(0, 19);
 }
 
-setInterval(fetchData, 5000);
+function toggleLiveMode() {
+  liveImageMode = !liveImageMode;
+  updateImageModeUI();
+  if (liveImageMode && imageFiles.length) {
+    imageSlider.value = imageFiles.length;
+    displayImage();
+  }
+}
+
+function updateImageModeUI() {
+  imageSlider.disabled = liveImageMode || !imageFiles.length;
+  imageModeStatus.textContent = liveImageMode
+    ? "Mode en direct : dernière image affichée automatiquement"
+    : "Mode manuel : utilisez le curseur pour naviguer dans les images";
+}
+
+slider.addEventListener("change", fetchData);
+imageSlider.addEventListener("input", () => {
+  if (!liveImageMode) displayImage();
+});
+liveToggleButton.addEventListener("click", toggleLiveMode);
+
 fetchData();
-setInterval(fetchImages, 5000);
 fetchImages();
+updateImageModeUI();
+
+setInterval(fetchData, 5000);
+setInterval(() => {
+  fetchImages();
+}, 5000);

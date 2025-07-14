@@ -34,7 +34,7 @@ def data_collector():
                     print(f"Error reading {sensor_name}: {e}")
             conn.commit()
 
-        save_image(url="http://10.42.0.85/photo", filename=f"static/images/{timestamp}.jpg")
+        save_image(filename=f"static/images/{timestamp}.jpg")
         time.sleep(INTERVAL_SECONDS)
 
 

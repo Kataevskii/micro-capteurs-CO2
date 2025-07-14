@@ -1,4 +1,3 @@
-/* Reset & global */
 html, body {
   margin: 0;
   padding: 0;
@@ -13,7 +12,6 @@ body {
   height: 100vh;
 }
 
-/* LEFT PANEL */
 #left-panel {
   width: 50%;
   padding: 10px;
@@ -22,7 +20,6 @@ body {
   flex-direction: column;
 }
 
-/* Conteneur des 3 graphiques empilés verticalement */
 .charts-container > div {
   background: white;
   padding: 10px;
@@ -33,7 +30,6 @@ body {
   flex-direction: column;
 }
 
-/* Canvas responsive */
 canvas {
   width: 100% !important;
   height: auto !important;
@@ -41,7 +37,6 @@ canvas {
   flex-grow: 1;
 }
 
-/* Titres centrés */
 h1 {
   text-align: center;
   margin: 5px 0 8px;
@@ -49,7 +44,6 @@ h1 {
   font-size: 1.2rem;
 }
 
-/* Slider en bas à gauche */
 .slider-container {
   margin-top: auto;
   border-top: 1px solid #ccc;
@@ -67,7 +61,6 @@ h1 {
   color: #333;
 }
 
-/* RIGHT PANEL */
 #right-panel {
   width: 45%;
   padding: 10px;
@@ -89,8 +82,23 @@ h1 {
   margin-bottom: 10px;
 }
 
+#liveToggleButton {
+  margin-top: 5px;
+  padding: 6px 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#imageModeStatus {
+  margin-top: 8px;
+  font-style: italic;
+  color: #333;
+  text-align: center;
+}
+
 #imageSlider {
   width: 100%;
+  margin-top: 10px;
 }
 
 #imageTimestamp {

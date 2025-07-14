@@ -67,7 +67,7 @@ def data():
 def images():
     image_folder = 'static/images'
     files = sorted(os.listdir(image_folder))
-    jpg_files = [f for f in files if f.endswith('.jpg')]
+    jpg_files = [f for f in files if f.endswith('.png')]
     return jsonify(jpg_files)
 
 

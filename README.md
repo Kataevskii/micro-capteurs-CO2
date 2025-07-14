@@ -8,7 +8,7 @@ Objectif : réaliser une station autonome pour suivre la météo depuis le jardi
 Moyens :
 - Programme d'identification des nuages reposant sur un algorithme de machine learning.
 - Design d'une interface pour la lecture des données.
-- Modélisation et impression 3D d'un boitier résistant à l'eau pour l'électronique. 
+- Modélisation et impression 3D d'un boîtier résistant à l'eau pour l'électronique. 
 Mesures envisagées : température, humidité, pression, CO2, vitesse et direction du vent, précipitations.
 
 Matériel utilisé :
@@ -22,7 +22,7 @@ Matériel utilisé :
 - Convertisseur 5V 
 
 Modélisation et impression 3D :
-- Conception d'un boitier pour l'électronique, adapté aux capteurs, utilisation d'inserts en laiton
+- Conception d'un boîtier pour l'électronique, adapté aux capteurs, utilisation d'inserts en laiton
 - Fabrication d'un anémomètre utilisant un laser et une photo résistance (méthode de mesure analogue à celle d'un codeur incrémental)
 - Design d'un support pour deux batteries lithium 3.6V (utilisation d'un convertisseur pour alimenter les composants en 5V)
 
@@ -34,4 +34,28 @@ Architecture de programmation :
 Pour le capteur ESP32-Camera, on lance un serveur sur la carte de l'ESP et on récupère les données en faisant les requêtes depuis le Raspberry. On fait la même chose pour l'anémomètre mais avec une carte Arduino Uno. Les capteurs de température, humidité et pression sont connectés au Raspberry en filaire (ports GPIO).
 On a aussi rajouté un script qui lance automatiquement le serveur après reboot du raspberry.
 
-Baptiste Michaud, Mikhail Kataevskii, Adrian Dabas & Nathan Mornand
+Les bibliothèques Python utilisées :
+- torch
+- torchvision
+- pillow
+- sklearn
+- numpy
+- matplotlib
+- seaborn
+- requests
+- sqlite3
+- Adafruit_DHT
+- board
+- serial
+- smbus2
+- bme280
+- flask
+- pysqlite
+
+Pour afficher simplement le dashboard, il suffit d'installer :
+- flask
+- pysqlite
+
+Pour lancer l'application complète, avec le recueil et enregistrement de données, exécutez le fichier `main.py`. Pour lancer simplement le dashboard, exécutez le fichier `app.py`.
+
+Auteurs du projet : Baptiste Michaud, Mikhail Kataevskii, Adrian Dabas & Nathan Mornand

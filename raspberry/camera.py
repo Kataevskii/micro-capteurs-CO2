@@ -1,6 +1,8 @@
 import requests
 
-def save_image(url='http://your-api-address/photo', filename='image.jpg'):
+default_url = "http://10.42.0.85/photo"
+
+def save_image(url=default_url, filename='image.jpg'):
     try:
         response = requests.get(url, timeout=10)
         with open(filename, 'wb') as f:

@@ -1,4 +1,3 @@
-import time
 import smbus2
 import bme280
 

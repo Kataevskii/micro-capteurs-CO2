@@ -1,6 +1,5 @@
 # Based on Adafruit_CircuitPython_DHT Library Example
 
-import time
 import board
 import adafruit_dht
 
